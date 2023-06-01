@@ -1,0 +1,72 @@
+<html lang="en">
+<head>
+    <meta name="google-signin-scope"
+          content="profile email https://www.googleapis.com/auth/firebase https://www.googleapis.com/auth/cloud-platform">
+    <meta name="google-signin-client_id"
+          content="175047346381-6rndk8rtpahjmiojj7km41ls4gojldar.apps.googleusercontent.com">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+
+    <style>
+        html, body {
+            font-family: sans-serif;
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<h3>FireCMS CLI</h3>
+<div class="g-signin2" data-onsuccess="onSignIn"
+     data-onfailure="onFailure">
+</div>
+<p>This tab will close automatically after you sign in</p>
+
+<script>
+
+    function reqListener() {
+        window.close();
+    }
+
+    function onSignIn(googleUser) {
+        console.log(googleUser.getAuthResponse());
+        const access_token = googleUser.getAuthResponse().access_token;
+        const oReq = new XMLHttpRequest();
+        oReq.addEventListener("load", reqListener);
+        oReq.open("POST", "/result/" + access_token);
+        oReq.send();
+    }
+
+    function onFailure(error) {
+        console.log(error);
+        const oReq = new XMLHttpRequest();
+        // oReq.addEventListener("load", reqListener);
+        oReq.open("POST", "/error/");
+        oReq.send();
+    }
+
+    function signOut() {
+        console.log("signOut");
+        var auth2 = gapi.auth2.getAuthInstance();
+        auth2.signOut().then(function () {
+            console.log('User signed out.');
+        });
+    }
+
+    // window.addEventListener('beforeunload', function (e) {
+    //     e.returnValue = '';
+    //     const oReq = new XMLHttpRequest();
+    //     oReq.open("POST", "/error/");
+    //     oReq.send();
+    // });
+
+</script>
+
+</body>
+</html>
