@@ -1,24 +1,29 @@
-## Testing the example
+## FireCMS starter template
 
-This example has dependencies to the FireCMS package in the parent directory
-for development purposes.
+Welcome to FireCMS!
 
-In a regular project you would link the dependencies regularly using the `npm`
-repository.
+This is a starter template for your next project. It includes the basic
+configuration to get you started.
 
-To run this project locally you can set your Firebase configuration in the file
-`firebase_config.ts` under `src`
+In order to run this project, you will need to create a Firebase project,
+create a web app and copy the configuration to the `firebase-config.ts`.
 
-You can run `yarn install` and then `yarn start` to test this package.
+Then simply run:
 
-### Algolia search
+### Running the project
 
-The example backend included in this package indexes various collections to
-Algolia, using Cloud functions. If you deploy it your data will be indexed.
-Then you can add your appId and searchKey to the .env file in the root of this
-example project.
+```bash
+yarn dev
+```
 
-Note that you only need to have a Cloud Functions backend such as this one if
-you want to enable text search or are extending functionality in any other
-way.
+### Building the project
 
+Make sure you update your `package.json` `build` script with the correct 
+project name. Then run:
+
+```bash
+yarn build
+```
+
+> Note: this may not work if you have set up your Firebase hosting with 
+> a custom config.

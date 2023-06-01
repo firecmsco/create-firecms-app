@@ -2,35 +2,23 @@ import chalk from 'chalk';
 import fs from 'fs';
 import ncp from 'ncp';
 import path from 'path';
-import {promisify} from 'util';
+import { promisify } from 'util';
 import execa from 'execa';
 import Listr from 'listr';
-import {projectInstall} from 'pkg-install';
-import {
-    createWebapp,
-    getOperation,
-    getWebappConfig,
-    listDocuments
-} from "./admin";
-import {CLIOptions} from "./cli";
-import {buildCollectionViewFromFirestoreResults} from "./schema_builder";
-import {camelCase} from "./util";
-import {EntityCollectionView} from "@camberi/firecms";
+import { projectInstall } from 'pkg-install';
+import { CLIOptions } from "./cli";
 
 import JSON5 from "json5";
 
 const access = promisify(fs.access);
 const copy = promisify(ncp);
 
-async function copyTemplateFiles(options: CLIOptions, webappConfig: object, collectionViews: Record<string, EntityCollectionView<any>>) {
+async function copyTemplateFiles(options: CLIOptions, webappConfig?: object) {
     return copy(options.templateDirectory, options.targetDirectory, {
         clobber: false,
     }).then(_ => {
         if (webappConfig) {
             writeWebAppConfig(options, webappConfig);
-        }
-        if (collectionViews) {
-            writeSiteConfig(options, collectionViews);
         }
     });
 }
@@ -77,30 +65,8 @@ export async function createProject(options: CLIOptions) {
 
     const tasks = new Listr([
         {
-            title: 'Inferring schema',
-            task: (ctx, task) => {
-                ctx.collectionViews = {};
-                return Promise.all(options.inferCollections.map(async (collectionId) => {
-                    const documents = await listDocuments(options.authToken, options.firebaseProject, collectionId);
-                    const collectionView = await buildCollectionViewFromFirestoreResults(documents, collectionId);
-                    const variableName = camelCase(collectionId);
-                    ctx.collectionViews[variableName] = collectionView;
-                }));
-            },
-            skip: () => !options.inferCollections,
-        },
-        {
-            title: 'Initialise webapp in Firebase',
-            task: (ctx, task) =>
-                createWebapp(options.authToken, options.firebaseProject, options.webappName)
-                    .then(operationId => getOperation(options.authToken, operationId))
-                    .then(webapp => getWebappConfig(options.authToken, options.firebaseProject, webapp.response.appId))
-                    .then(config => ctx.webappConfig = config),
-            skip: () => !options.createWebapp,
-        },
-        {
             title: 'Copy project files',
-            task: (ctx) => copyTemplateFiles(options, ctx.webappConfig, ctx.collectionViews),
+            task: (ctx) => copyTemplateFiles(options, ctx.webappConfig),
         },
         {
             title: 'Initialize git',
@@ -148,55 +114,6 @@ function writeWebAppConfig(options: CLIOptions, webappConfig: object) {
     fs.writeFile(options.targetDirectory + '/src/firebase_config.ts',
         `export const firebaseConfig = ${JSON5.stringify(webappConfig, null, '\t')};`,
         function (err) {
-            if (err) return console.log(err);
-        });
-}
-
-function writeSiteConfig(options: CLIOptions, collectionViews: Record<string, EntityCollectionView<any>>) {
-
-
-    let data = `
-import React from "react";
-
-import {
-Entity,
-EntityCollectionView,
-EnumValues,
-buildSchema
-} from "@camberi/firecms";
-
-`;
-
-    Object.entries(collectionViews).forEach(([variable, entityCollectionView]) => {
-        data += `
-const ${variable} = buildSchema(
-    ${JSON5.stringify(entityCollectionView.schema, null, '\t')}
-);
-
-`
-    });
-
-
-    data += `
-export const navigation: EntityCollectionView<any>[] = [
-`;
-
-    Object.entries(collectionViews).forEach(([variable, entityCollectionView]) => {
-        data += `
-    {
-        relativePath: ${JSON5.stringify(entityCollectionView.relativePath, null, '\t')},
-        schema: ${variable},
-        name: ${JSON5.stringify(entityCollectionView.name, null, '\t')},
-    },
-`;
-    });
-
-    data += `
-];
-`;
-
-    fs.writeFile(options.targetDirectory + '/src/site_config.tsx',
-        data, (err) => {
             if (err) return console.log(err);
         });
 }
