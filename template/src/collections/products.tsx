@@ -26,7 +26,7 @@ export const productsCollection = buildCollection<Product>({
     path: "products",
     icon: "LocalGroceryStore",
     group: "E-commerce",
-    permissions: ({ authController }) => ({
+    permissions: ({ authController, user }) => ({
         read: true,
         edit: true,
         create: true,

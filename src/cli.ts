@@ -1,6 +1,7 @@
 import arg from 'arg';
 import { createProject } from "./main";
 import inquirer from "inquirer";
+import chalk from "chalk";
 
 export type CLIOptions = Partial<{
     skipPrompts: boolean;
@@ -73,6 +74,16 @@ async function promptForMissingOptions(options: CLIOptions): Promise<CLIOptions>
 }
 
 export async function cli(args) {
+
+    console.log(`
+${chalk.green.bold(" ___ _          ___ __  __ ___")}
+${chalk.green.bold("| __(_)_ _ ___ / __|  \\/  / __|")}
+${chalk.green.bold("| _|| | '_/ -_) (__| |\\/| \\__ \\")}
+${chalk.green.bold("|_| |_|_| \\___|\\___|_|  |_|___/")}
+
+${chalk.green.bold("Welcome to the CMS CLI")}
+🔥🔥🔥
+`);
 
     let options = parseArgumentsIntoOptions(args);
 

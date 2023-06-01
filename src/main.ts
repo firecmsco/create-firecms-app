@@ -61,8 +61,6 @@ export async function createProject(options: CLIOptions) {
         process.exit(1);
     }
 
-    console.log(options);
-
     const tasks = new Listr([
         {
             title: 'Copy project files',
@@ -90,11 +88,13 @@ export async function createProject(options: CLIOptions) {
 
     console.log('%s Project ready', chalk.green.bold('DONE'));
     console.log('');
-    console.log('Now you can run:');
+    console.log('First update your firebase config in', chalk.bgYellow.black.bold('src/firebase-config.ts'));
+    console.log('');
+    console.log('Then run:');
     console.log(chalk.bgCyanBright.black.bold('cd ' + options.dir_name));
     if (options.skipInstall)
-        console.log(chalk.bgCyanBright.black.bold('yarn install'));
-    console.log(chalk.bgCyanBright.black.bold('yarn start'));
+        console.log(chalk.bgCyanBright.black.bold('yarn'));
+    console.log(chalk.bgCyanBright.black.bold('yarn dev'));
     console.log('');
     return true;
 }
