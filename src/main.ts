@@ -86,15 +86,17 @@ export async function createProject(options: CLIOptions) {
 
     await tasks.run();
 
+    console.log('');
     console.log('%s Project ready', chalk.green.bold('DONE'));
     console.log('');
-    console.log('First update your firebase config in', chalk.bgYellow.black.bold('src/firebase-config.ts'));
+    console.log('First update your firebase config in');
+    console.log(chalk.bgYellow.black.bold('src/firebase-config.ts'));
     console.log('');
     console.log('Then run:');
-    console.log(chalk.bgCyanBright.black.bold('cd ' + options.dir_name));
+    console.log(chalk.cyan.bold('cd ' + options.dir_name));
     if (options.skipInstall)
-        console.log(chalk.bgCyanBright.black.bold('yarn'));
-    console.log(chalk.bgCyanBright.black.bold('yarn dev'));
+        console.log(chalk.cyan.bold('yarn'));
+    console.log(chalk.cyan.bold('yarn dev'));
     console.log('');
     return true;
 }

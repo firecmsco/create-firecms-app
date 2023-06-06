@@ -1,6 +1,6 @@
 {
   "name": "create-firecms-app",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "A CLI to bootstrap FireCMS",
   "main": "src/index.ts",
   "bin": {
@@ -49,5 +49,9 @@
     "build/",
     "src/",
     "template/"
+  ],
+  "exclude": [
+    "node_modules",
+    "template/node_modules"
   ]
 }

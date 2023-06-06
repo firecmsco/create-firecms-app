@@ -75,6 +75,7 @@ async function promptForMissingOptions(options: CLIOptions): Promise<CLIOptions>
 
 export async function cli(args) {
 
+    console.log('');
     console.log(`
 ${chalk.green.bold(" ___ _          ___ __  __ ___")}
 ${chalk.green.bold("| __(_)_ _ ___ / __|  \\/  / __|")}
@@ -84,6 +85,7 @@ ${chalk.green.bold("|_| |_|_| \\___|\\___|_|  |_|___/")}
 ${chalk.green.bold("Welcome to the CMS CLI")}
 🔥🔥🔥
 `);
+    console.log('');
 
     let options = parseArgumentsIntoOptions(args);
 
