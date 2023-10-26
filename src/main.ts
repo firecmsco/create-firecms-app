@@ -25,9 +25,6 @@ async function copyTemplateFiles(options: CLIOptions, webappConfig?: object) {
 
 export async function createProject(options: CLIOptions) {
 
-    // @ts-ignore
-    const currentFileUrl = import.meta["url"];
-
     const dir = './' + options.dir_name;
     if (fs.existsSync(dir)) {
         if (fs.readdirSync(dir).length !== 0) {
@@ -49,15 +46,15 @@ export async function createProject(options: CLIOptions) {
     };
 
     const templateDir = path.resolve(
-        new URL(currentFileUrl).pathname,
-        '../../template'
+        __dirname,
+        '../template'
     );
     options.templateDirectory = templateDir;
 
     try {
         await access(templateDir, fs.constants.R_OK);
     } catch (err) {
-        console.error('%s Invalid template name', chalk.red.bold('ERROR'));
+        console.error('%s Invalid template name ' + templateDir, chalk.red.bold('ERROR'));
         process.exit(1);
     }
 

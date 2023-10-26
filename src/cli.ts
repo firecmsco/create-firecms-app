@@ -75,7 +75,6 @@ async function promptForMissingOptions(options: CLIOptions): Promise<CLIOptions>
 
 export async function cli(args) {
 
-    console.log('');
     console.log(`
 ${chalk.green.bold(" ___ _          ___ __  __ ___")}
 ${chalk.green.bold("| __(_)_ _ ___ / __|  \\/  / __|")}
@@ -92,4 +91,24 @@ ${chalk.green.bold("Welcome to the CMS CLI")}
     options = await promptForMissingOptions(options);
 
     await createProject(options);
+}
+function debugPaths() {
+    // @ts-ignore
+    const currentFileUrl = import.meta["url"];
+    console.log("currentFileUrl", currentFileUrl)
+    console.log("__dirname", __dirname);
+    console.log("process.cwd()", process.cwd());
+
+    const templateDir = path.resolve(
+        new URL(currentFileUrl).pathname,
+        '../../template'
+    );
+
+    console.log("templateDir", templateDir);
+
+    const templateDir2 = path.resolve(
+        __dirname,
+        '../template'
+    );
+    console.log("templateDir2", templateDir2);
 }
